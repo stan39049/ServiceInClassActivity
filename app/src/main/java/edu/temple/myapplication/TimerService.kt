@@ -20,6 +20,8 @@ class TimerService : Service() {
 
     inner class TimerBinder : Binder() {
 
+        fun getService(): TimerService = this@TimerService
+
         // Check if Timer is already running
         val isRunning: Boolean
             get() = this@TimerService.isRunning
