@@ -22,6 +22,7 @@ class TimerService : Service() {
 
     private lateinit var sharedPref: SharedPreferences
 
+    private var currentTime: Int = 0
 
 
     inner class TimerBinder : Binder() {
@@ -91,6 +92,7 @@ class TimerService : Service() {
         if (::t.isInitialized) {
             paused = !paused
             isRunning = !paused
+            sharedPref.edit().putInt("time", currentTime).apply()
         }
     }
 
@@ -99,10 +101,13 @@ class TimerService : Service() {
         override fun run() {
             isRunning = true
             try {
-                for (i in startValue downTo 1)  {
+                for (i in startValue downTo 0)  {
                     Log.d("Countdown", i.toString())
-
+                    currentTime = i
                     timerHandler?.sendEmptyMessage(i)
+                    if(currentTime == 0){
+                        sharedPref.edit().putInt("time", currentTime).apply()
+                    }
 
                     while (paused);
                     sleep(1000)
