@@ -1,7 +1,9 @@
 package edu.temple.myapplication
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
@@ -17,6 +19,10 @@ class TimerService : Service() {
     lateinit var t: TimerThread
 
     private var paused = false
+
+    private lateinit var sharedPref: SharedPreferences
+
+
 
     inner class TimerBinder : Binder() {
 
@@ -64,7 +70,7 @@ class TimerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
+        sharedPref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
         Log.d("TimerService status", "Created")
     }
 
@@ -73,7 +79,11 @@ class TimerService : Service() {
     }
 
     fun start(startValue: Int) {
-        t = TimerThread(startValue)
+        var startTime = startValue
+        if(sharedPref.getInt("time", startValue)>0) {
+            startTime = sharedPref.getInt("time", startValue)
+        }
+        t = TimerThread(startTime)
         t.start()
     }
 

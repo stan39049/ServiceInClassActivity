@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 timerService?.start(10)
             }
             R.id.action_stop ->{
-                timerService?.stopSelf()
+                timerService?.pause()
             }
 
             else ->{return false}
